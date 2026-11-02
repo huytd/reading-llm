@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="A field guide to recognizing the habits in LLM writing and reading past them to the substance.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Reading LLM Prose</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a single reading column (~66ch) with a chapter index up top; filler is struck through, payload is highlighted, like a proofreader's marked-up copy. */
+:root {
+  --paper: #f4f6f8;
+  --surface: #ffffff;
+  --ink: #1b2130;
+  --ink-soft: #586176;
+  --rule: #d9dee7;
+  --pen: #2f45b5;          /* proofreader's blue pen */
+  --strike: #b5473a;       /* red strike for filler */
+  --mark: #ffe35a;         /* highlighter for payload */
+  --mark-ink: #1b2130;
+  --quote-bg: #eceff4;
+
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "Literata", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12151c; --surface: #1a1e28; --ink: #e3e6ee; --ink-soft: #9aa2b4;
+    --rule: #2c3242; --pen: #93a6ff; --strike: #ef8a7c; --mark: #e8c93a; --mark-ink: #12151c;
+    --quote-bg: #202533; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12151c; --surface: #1a1e28; --ink: #e3e6ee; --ink-soft: #9aa2b4;
+  --rule: #2c3242; --pen: #93a6ff; --strike: #ef8a7c; --mark: #e8c93a; --mark-ink: #12151c;
+  --quote-bg: #202533; color-scheme: dark;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+.wrap {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 3.5rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+/* ---------- header ---------- */
+header { display: flex; flex-direction: column; gap: 1.1rem; }
+.eyebrow {
+  font-family: var(--mono); font-size: .75rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--pen);
+}
+h1 {
+  font-family: var(--display); font-weight: 800; font-size: clamp(2.4rem, 7vw, 3.6rem);
+  line-height: 1.02; letter-spacing: -.02em; margin: 0; text-wrap: balance;
+}
+.thesis {
+  font-size: 1.2rem; line-height: 1.55; margin: 0;
+}
+.lede { color: var(--ink-soft); margin: 0; }
+
+/* the marking system */
+.f { text-decoration: line-through; text-decoration-color: var(--strike); text-decoration-thickness: 2px; color: var(--ink-soft); }
+.p { background: var(--mark); color: var(--mark-ink); padding: 0 .15em; border-radius: 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: .5rem 1.5rem;
+  font-family: var(--mono); font-size: .78rem; color: var(--ink-soft);
+}
+
+/* ---------- index ---------- */
+nav.index {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding-block: .9rem;
+}
+nav.index ol {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: .35rem 1.5rem;
+}
+nav.index a {
+  display: flex; gap: .6rem; align-items: baseline;
+  color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 500; font-size: .95rem;
+}
+nav.index a span { font-family: var(--mono); font-size: .75rem; color: var(--pen); min-width: 1.4rem; }
+nav.index a:hover, nav.index a:focus-visible { color: var(--pen); }
+
+/* ---------- chapters ---------- */
+section { display: flex; flex-direction: column; gap: 1.1rem; scroll-margin-top: 1.5rem; }
+.ch-num { font-family: var(--mono); font-size: .78rem; color: var(--pen); letter-spacing: .08em; text-transform: uppercase; }
+h2 {
+  font-family: var(--display); font-weight: 700; font-size: clamp(1.6rem, 4.5vw, 2rem);
+  line-height: 1.15; letter-spacing: -.01em; margin: -.6rem 0 0; text-wrap: balance;
+}
+h3 {
+  font-family: var(--display); font-weight: 700; font-size: 1.15rem; margin: .8rem 0 -.4rem;
+}
+p { margin: 0; max-width: 66ch; }
+.lead { font-size: 1.12rem; }
+em { font-style: italic; }
+
+.move {
+  border-left: 3px solid var(--pen);
+  padding: .35rem 0 .35rem 1rem;
+  color: var(--ink);
+}
+.move b {
+  display: block; font-family: var(--mono); font-weight: 600; font-size: .72rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--pen); margin-bottom: .15rem;
+}
+
+ul.plain, ol.steps { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: .45rem; }
+ol.steps { padding-left: 0; list-style: none; counter-reset: s; gap: .9rem; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 2rem 1fr; gap: .5rem; }
+ol.steps li::before {
+  content: counter(s); font-family: var(--display); font-weight: 800; font-size: 1.3rem; color: var(--pen); line-height: 1.3;
+}
+ol.steps li > div { min-width: 0; }
+ol.steps strong { font-family: var(--display); font-weight: 700; }
+
+code, .q { font-family: var(--mono); font-size: .86em; }
+.q { color: var(--ink); background: var(--quote-bg); padding: .05em .35em; border-radius: 3px; }
+
+/* tables */
+.tbl { overflow-x: auto; border-top: 1px solid var(--ink); }
+table { border-collapse: collapse; width: 100%; font-size: .93rem; line-height: 1.45; }
+th {
+  text-align: left; font-family: var(--mono); font-weight: 600; font-size: .7rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-soft); padding: .7rem .8rem .5rem 0; border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+td { padding: .7rem .8rem .7rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td:first-child { font-family: var(--display); font-weight: 700; min-width: 8rem; }
+td .q { white-space: normal; }
+.wide table { min-width: 36rem; }
+
+/* worked example */
+.example {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 1.25rem 1.25rem 1.1rem; display: flex; flex-direction: column; gap: 1rem;
+}
+.example-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.example-head span { font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+button.toggle {
+  font-family: var(--mono); font-size: .8rem; font-weight: 600;
+  background: transparent; color: var(--pen); border: 1.5px solid var(--pen); border-radius: 999px;
+  padding: .4rem .9rem; cursor: pointer;
+}
+button.toggle:hover { background: var(--pen); color: var(--surface); }
+button.toggle:focus-visible, nav.index a:focus-visible { outline: 2px solid var(--pen); outline-offset: 3px; }
+.sample { font-size: 1.05rem; line-height: 1.75; }
+.sample .x, .sample .y { transition: color .2s, background-color .2s; }
+.sample.decoded .x { text-decoration: line-through; text-decoration-color: var(--strike); text-decoration-thickness: 2px; color: var(--ink-soft); }
+.sample.decoded .y { background: var(--mark); color: var(--mark-ink); padding: 0 .15em; border-radius: 2px; }
+.verdict { border-top: 1px dashed var(--rule); padding-top: .9rem; }
+
+footer { color: var(--ink-soft); font-size: .9rem; border-top: 1px solid var(--rule); padding-top: 1.2rem; }
+
+@media (prefers-reduced-motion: reduce) { .sample .x, .sample .y { transition: none; } html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">A field guide · Written by Claude</div>
+  <h1>Reading LLM Prose</h1>
+  <p class="thesis"><span class="f">Great question! It's worth noting that navigating AI-generated text can be a nuanced journey.</span> <span class="p">Most of an LLM answer is packaging. Learn the packaging and you can skip straight to the payload.</span></p>
+  <p class="lede">This guide names the habits that make LLM writing hard to digest, shows what each looks like, and gives you a reading move for each one. I wrote it, so it will show some of the same habits. Spotting them here is good practice.</p>
+  <div class="legend"><span><span class="f">struck through</span> = filler you can skip</span><span><span class="p">highlighted</span> = the part that carries information</span></div>
+</header>
+
+<nav class="index" aria-label="Chapters">
+  <ol>
+    <li><a href="#why"><span>00</span>Why your brain resists it</a></li>
+    <li><a href="#structure"><span>01</span>Structure</a></li>
+    <li><a href="#sentences"><span>02</span>Sentence patterns</a></li>
+    <li><a href="#vocabulary"><span>03</span>Vocabulary</a></li>
+    <li><a href="#stance"><span>04</span>Stance</a></li>
+    <li><a href="#rhythm"><span>05</span>Rhythm</a></li>
+    <li><a href="#wrapper"><span>06</span>Openings and closings</a></li>
+    <li><a href="#method"><span>07</span>How to read it</a></li>
+    <li><a href="#cheatsheet"><span>08</span>Cheat sheet</a></li>
+  </ol>
+</nav>
+
+<section id="why">
+  <div class="ch-num">Chapter 00</div>
+  <h2>Why your brain resists LLM prose</h2>
+  <p class="lead">LLM prose is hard to digest because every sentence carries the same weight. Your brain looks for the one sentence that matters and finds a flat plain instead.</p>
+  <p>The flatness has a cause. Models like me are trained on human feedback, and raters reward answers that feel complete, organized, polite and safe. So we pad, hedge, balance and structure everything, whether the content needs it or not.</p>
+  <p>The habits are repetitive, which is good news for you. Once you can name them, you can skim the wrapper and read the substance.</p>
+</section>
+
+<section id="structure">
+  <div class="ch-num">Chapter 01</div>
+  <h2>Structure: the scaffolding</h2>
+  <p class="lead">LLM answers are built for skimming, not for following an argument. The formatting is a map, so use it as one.</p>
+
+  <h3>Headers on everything</h3>
+  <p>Even a four-paragraph answer gets headers like <span class="q">Overview</span>, <span class="q">Key Considerations</span> and <span class="q">Conclusion</span>. The headers are often the answer in miniature.</p>
+  <div class="move"><b>Reading move</b>Read only the headers first, as a table of contents. Then go to the one section you need.</div>
+
+  <h3>Bullets that chop up reasoning</h3>
+  <p>Bullets make items look parallel and equal. They also delete the joints between ideas: the <em>because</em> and <em>so</em> that tell you how one point leads to the next.</p>
+  <div class="move"><b>Reading move</b>Decide whether the bullets are <em>options</em> (pick one), <em>steps</em> (do in order) or <em>factors</em> (weigh together). The text rarely says, and the answer changes how you use them.</div>
+
+  <h3>Scattered bold</h3>
+  <p>Bold marks the phrases the model expects you to scan for. It works as a decent highlighter.</p>
+  <div class="move"><b>Reading move</b>On a first pass, read only the bold text. It usually rebuilds the main point.</div>
+
+  <h3>The summary sandwich</h3>
+  <p>A common shape: an opening that restates your question, a body, then <span class="q">In summary</span> restating the body. The same idea appears three times.</p>
+  <div class="move"><b>Reading move</b>Read the conclusion first. It is the compressed version, and the body becomes detail you consult only when needed.</div>
+
+  <h3>Exhaustive lists</h3>
+  <p>Ask for advice and you get seven factors when two matter. Models list everything relevant because leaving something out feels riskier than including it.</p>
+  <div class="move"><b>Reading move</b>The first item is usually the most important. After that, look for items with a specific number, name or condition. Generic items like <span class="q">consider your goals</span> can be skipped.</div>
+</section>
+
+<section id="sentences">
+  <div class="ch-num">Chapter 02</div>
+  <h2>Sentence patterns</h2>
+  <p class="lead">A handful of sentence shapes appear over and over. Each has a real part and a decorative part, and you can learn to read only the real part.</p>
+  <div class="tbl wide">
+    <table>
+      <thead><tr><th>Pattern</th><th>Typical example</th><th>Read it as</th></tr></thead>
+      <tbody>
+        <tr><td>Contrast frame</td><td><span class="f">This isn't just about speed —</span> <span class="p">it's about trust.</span></td><td>Only the second half. The first half is a claim nobody made.</td></tr>
+        <tr><td>Rule of three</td><td>A <span class="p">fast</span>, <span class="f">reliable, and scalable</span> solution.</td><td>One idea. The third item is often added for rhythm.</td></tr>
+        <tr><td>Colon reveal</td><td><span class="f">The answer is simple:</span> <span class="p">cache the results.</span></td><td>Skip to after the colon.</td></tr>
+        <tr><td>Dash aside</td><td><span class="p">The fix</span> <span class="f">— while not perfect —</span> <span class="p">works well.</span></td><td>Read without the dashed part, then decide if the aside matters.</td></tr>
+        <tr><td>Question, then answer</td><td><span class="f">So what does this mean? It means</span> <span class="p">…</span></td><td>Skip the question. It is a drumroll.</td></tr>
+        <tr><td>Universal address</td><td><span class="f">Whether you're a beginner or an expert,</span> <span class="p">…</span></td><td>Delete everything before the comma.</td></tr>
+        <tr><td>Abstract, then concrete</td><td><span class="f">Context matters. For example,</span> <span class="p">a 10-person team…</span></td><td>Jump to the example. It is the content.</td></tr>
+        <tr><td>"Which means" chain</td><td><span class="f">X, which means Y, which allows</span> <span class="p">Z.</span></td><td>Read the last clause. The chain builds to it.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>These shapes sound insightful and well paced, so they were rewarded. The feeling of insight and actual information are different things.</p>
+  <div class="move"><b>Reading move</b>When a sentence has a dramatic shape, find the noun or verb that would survive a plain rewrite. That is the content.</div>
+</section>
+
+<section id="vocabulary">
+  <div class="ch-num">Chapter 03</div>
+  <h2>Vocabulary: the favored words</h2>
+  <p class="lead">LLMs lean on abstract, slightly elevated words that sound weighty but carry little. Translate them as you read and sentences shrink by half.</p>
+  <div class="tbl wide">
+    <table>
+      <thead><tr><th>LLM word</th><th>Plain meaning</th><th>Information added</th></tr></thead>
+      <tbody>
+        <tr><td>crucial, essential, key, vital, pivotal</td><td>"this one" or "important"</td><td>Low. Used for almost everything.</td></tr>
+        <tr><td>robust</td><td>"works" or "handles edge cases"</td><td>Low, unless it names which cases</td></tr>
+        <tr><td>seamless</td><td>"easy"</td><td>Low</td></tr>
+        <tr><td>leverage, utilize</td><td>"use"</td><td>None</td></tr>
+        <tr><td>navigate</td><td>"deal with"</td><td>None</td></tr>
+        <tr><td>landscape, realm, space, ecosystem</td><td>"the situation" or "the field"</td><td>None</td></tr>
+        <tr><td>delve into, dive into, explore</td><td>"look at" or "discuss"</td><td>None</td></tr>
+        <tr><td>foster, cultivate</td><td>"encourage"</td><td>Low</td></tr>
+        <tr><td>enhance, optimize, streamline</td><td>"improve"</td><td>Low, unless it says by how much</td></tr>
+        <tr><td>comprehensive, holistic</td><td>"covers a lot"</td><td>Low</td></tr>
+        <tr><td>nuanced, multifaceted, complex</td><td>"has exceptions I won't list"</td><td>A cue to ask which exceptions</td></tr>
+        <tr><td>it's worth noting, importantly</td><td>"here's another point"</td><td>Mild emphasis only</td></tr>
+        <tr><td>ultimately, at the end of the day</td><td>"my conclusion is"</td><td>Useful. The verdict follows.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>The deeper habit: abstraction</h3>
+  <p>The specific words change between models and versions, and some famous ones have faded. The underlying habit stays: describing a <em>category</em> of thing instead of the thing itself. <span class="q">Improves team dynamics</span> instead of <span class="q">people stop interrupting each other in meetings</span>.</p>
+  <div class="move"><b>Reading move</b>For any abstract sentence, ask "for example?" If the text gives one, read the example and skip the abstraction. If it doesn't, the sentence probably isn't saying much.</div>
+</section>
+
+<section id="stance">
+  <div class="ch-num">Chapter 04</div>
+  <h2>Stance: hedging, balance and agreement</h2>
+  <p class="lead">LLMs are trained to avoid being wrong, one-sided or rude. That produces habits that blur what the writer actually thinks.</p>
+
+  <h3>Hedging</h3>
+  <p>Words like <em>generally, often, typically, may, can, in many cases</em> soften nearly every claim. Some hedges are real uncertainty. Most are reflex.</p>
+  <div class="move"><b>Reading move</b>Look for the sentence with no hedge. That is usually the committed claim. A hedge followed by a condition (<span class="q">usually, unless your data is under 1 GB</span>) is real. A bare "usually" is padding.</div>
+
+  <h3>Both-sidesing</h3>
+  <p><span class="q">On one hand… on the other hand… ultimately, it depends on your needs.</span> This looks balanced but can leave you with no answer.</p>
+  <div class="move"><b>Reading move</b>Find what it "depends on". That is the real decision variable. Answer it for yourself, or ask the model directly: "Given X, which one?"</div>
+
+  <h3>Validation and agreement</h3>
+  <p><span class="q">Great question!</span> <span class="q">You're absolutely right.</span> <span class="q">That's a thoughtful approach.</span> These carry no information.</p>
+  <p>They can also hide a problem. Models tend to agree with the user. When an LLM agrees with you, check whether it gave a reason. Agreement without reasoning is weak evidence.</p>
+
+  <h3>Flat confidence</h3>
+  <p>This one matters most. LLM prose sounds equally confident whether a claim is solid or invented. Tone tells you nothing about reliability.</p>
+  <div class="move"><b>Reading move</b>Verify the specifics you will act on: numbers, names, dates, quotes, citations, code. Fluent is not the same as correct.</div>
+</section>
+
+<section id="rhythm">
+  <div class="ch-num">Chapter 05</div>
+  <h2>Rhythm: why it all sounds the same</h2>
+  <p class="lead">This is probably the main reason your brain resists. LLM text has an even, medium-everything rhythm, and attention drifts when nothing changes.</p>
+
+  <h3>Uniform paragraphs</h3>
+  <p>Most paragraphs follow one template: a topic sentence, two supporting sentences, a wrap-up. Every paragraph is about the same length.</p>
+  <p>Human writers vary this. A one-line paragraph says "this matters." A long, winding one says "stay with me." Without those peaks you can't tell where the emphasis is.</p>
+
+  <h3>Perfect parallelism</h3>
+  <p>Every bullet has the same grammatical shape and roughly the same length. A trivial point ends up looking as important as a critical one.</p>
+
+  <h3>Transitions that add and never argue</h3>
+  <p>Watch the connecting words. <em>Additionally, furthermore, moreover, also</em> just mean "here's another item." They pile things up without showing how they relate.</p>
+  <p>The words that carry logic are <em>because, so, therefore, but, unless, which is why</em>. Where you find them, real reasoning is happening. Where they are missing, there may be no reasoning at all, only a list in paragraph form.</p>
+
+  <h3>Signposting</h3>
+  <p><span class="q">Let's break this down.</span> <span class="q">Here's the thing.</span> <span class="q">First… Second… Finally…</span> These are road signs. They help you orient and contain nothing else.</p>
+  <div class="move"><b>Reading move</b>The text won't create emphasis for you, so create it yourself. Flag sentences that contain a number, a name, a decision or a logic word. Those are your peaks.</div>
+</section>
+
+<section id="wrapper">
+  <div class="ch-num">Chapter 06</div>
+  <h2>Openings and closings: the wrapper</h2>
+  <p class="lead">The first and last few lines of an LLM answer are often packaging. Learn the wrapper and you can peel it off at a glance.</p>
+
+  <h3>Common openings</h3>
+  <ul class="plain">
+    <li><span class="q">Great question!</span> / <span class="q">Certainly! Here's…</span> Politeness, no content.</li>
+    <li><span class="q">You're asking about X.</span> Your own question, restated.</li>
+    <li><span class="q">X is a complex and multifaceted topic.</span> A warm-up before the answer.</li>
+    <li><span class="q">There are several factors to consider.</span> Announces that a list is coming.</li>
+  </ul>
+  <p>Newer models, including me, are trained to lead with the answer. So check sentence one first. If it is wrapper, the answer is usually sentence two or three.</p>
+
+  <h3>Common closings</h3>
+  <ul class="plain">
+    <li><span class="q">In summary…</span> / <span class="q">In conclusion…</span> A repeat of the body.</li>
+    <li><span class="q">Ultimately, the best choice depends on your specific needs.</span> A non-answer.</li>
+    <li><span class="q">I hope this helps!</span> Politeness.</li>
+    <li><span class="q">Would you like me to…?</span> An offer.</li>
+    <li><span class="q">Remember to consult a professional.</span> A reflex disclaimer, unless it names a specific risk.</li>
+  </ul>
+  <div class="move"><b>Reading move</b>The last real sentence sits just before the offer or sign-off. Give the offer one glance, since it sometimes suggests a useful next step.</div>
+</section>
+
+<section id="method">
+  <div class="ch-num">Chapter 07</div>
+  <h2>How to read it: a practical method</h2>
+  <p class="lead">Read LLM text like a scout, not a student. Find the payload first, then decide how much of the rest you need.</p>
+  <ol class="steps">
+    <li><div><strong>Read the first sentence and the last real paragraph.</strong> Together they are often the whole answer.</div></li>
+    <li><div><strong>Skim headers and bold as an outline.</strong> Pick the one section you need.</div></li>
+    <li><div><strong>Hunt for specifics.</strong> Numbers, names, dates, code, concrete examples. That is the payload. The abstract sentences around it are packaging.</div></li>
+    <li><div><strong>Translate filler as you go.</strong> <span class="q">Leverage robust solutions</span> becomes "use something that works."</div></li>
+    <li><div><strong>Find the committed claims.</strong> The unhedged sentences, and whatever the answer "depends on."</div></li>
+    <li><div><strong>Follow the logic words.</strong> <em>Because, so, but, unless</em> show the reasoning. No logic words, no argument.</div></li>
+    <li><div><strong>Verify what matters.</strong> A fluent tone is not evidence. Check facts you will act on.</div></li>
+    <li><div><strong>Fix it upstream.</strong> Ask for a format you can digest: "Answer in three sentences," "Lead with your recommendation," "No bullets, explain the reasoning," or "Give me one example."</div></li>
+  </ol>
+
+  <h3>Worked example</h3>
+  <div class="example">
+    <div class="example-head">
+      <span>A typical LLM paragraph</span>
+      <button class="toggle" id="decode-toggle" type="button" aria-pressed="false">Decode it</button>
+    </div>
+    <p class="sample" id="sample"><span class="x">Great question! Choosing a database is a crucial decision that requires navigating a complex landscape of options. It's not just about performance — it's about scalability, reliability, and long-term maintainability. Generally speaking,</span> <span class="y">PostgreSQL is</span> <span class="x">often</span> <span class="y">a</span> <span class="x">robust</span> <span class="y">choice</span> <span class="x">for many use cases, as it offers comprehensive features. However, the best choice ultimately depends on your specific needs.</span></p>
+    <div class="verdict">
+      <ul class="plain">
+        <li><span class="q">Great question!</span> Wrapper. Skip.</li>
+        <li><span class="q">Crucial decision… complex landscape</span> Warm-up. Skip.</li>
+        <li><span class="q">Not just X — it's Y, Z and W</span> Contrast frame plus triplet. No claim.</li>
+        <li><span class="q">Generally… often… robust… many use cases</span> Four hedges around one real claim.</li>
+        <li><span class="q">Depends on your specific needs</span> Never says which needs.</li>
+      </ul>
+    </div>
+  </div>
+  <p>The whole paragraph says one thing: <span class="p">PostgreSQL is a reasonable default.</span> That is six words out of about sixty.</p>
+  <p>The next question to ask: "What would make PostgreSQL the wrong choice for me?" It forces the hidden "depends on" into the open.</p>
+</section>
+
+<section id="cheatsheet">
+  <div class="ch-num">Chapter 08</div>
+  <h2>Cheat sheet</h2>
+  <p class="lead">Keep this nearby while reading LLM text until spotting the patterns becomes automatic.</p>
+  <div class="tbl wide">
+    <table>
+      <thead><tr><th>Pattern</th><th>Looks like</th><th>Usually means</th><th>Do this</th></tr></thead>
+      <tbody>
+        <tr><td>Wrapper opening</td><td>"Great question!" "Certainly!"</td><td>Nothing</td><td>Start at sentence two</td></tr>
+        <tr><td>Headers everywhere</td><td>Overview / Key Considerations</td><td>Built for skimming</td><td>Read headers first</td></tr>
+        <tr><td>Bold phrases</td><td><b>key point</b> mid-paragraph</td><td>The model's own highlights</td><td>First pass: bold only</td></tr>
+        <tr><td>Summary sandwich</td><td>"In summary…"</td><td>A repeat of the body</td><td>Read the conclusion first</td></tr>
+        <tr><td>Long list</td><td>7 factors</td><td>2 matter</td><td>Item 1, plus items with specifics</td></tr>
+        <tr><td>Contrast frame</td><td>"Not X — it's Y"</td><td>Y is the claim</td><td>Read only Y</td></tr>
+        <tr><td>Triplet</td><td>"fast, simple, and scalable"</td><td>One idea</td><td>Collapse to one</td></tr>
+        <tr><td>Elevated word</td><td>crucial, robust, leverage</td><td>A plain word</td><td>Translate</td></tr>
+        <tr><td>Abstraction</td><td>"improves dynamics"</td><td>No example given</td><td>Ask "for example?"</td></tr>
+        <tr><td>Hedge</td><td>generally, often, may</td><td>Reflex, or real doubt</td><td>Find the unhedged sentence</td></tr>
+        <tr><td>"It depends"</td><td>"depends on your needs"</td><td>A hidden decision variable</td><td>Ask "depends on what?"</td></tr>
+        <tr><td>Agreement</td><td>"You're absolutely right"</td><td>Possibly just agreeable</td><td>Look for a reason</td></tr>
+        <tr><td>Add-on transitions</td><td>additionally, furthermore</td><td>Another item, no logic</td><td>Hunt for because / so / but</td></tr>
+        <tr><td>Flat confidence</td><td>Same tone throughout</td><td>Tone ≠ accuracy</td><td>Verify specifics</td></tr>
+        <tr><td>Closing offer</td><td>"Would you like me to…"</td><td>An optional next step</td><td>Glance, then stop</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>Written by Claude, November 2026. The patterns describe LLM writing in general; any single model shows some of them more than others.</footer>
+
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById('decode-toggle');
+  var sample = document.getElementById('sample');
+  if (!btn || !sample) return;
+  btn.addEventListener('click', function () {
+    var on = sample.classList.toggle('decoded');
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.textContent = on ? 'Show original' : 'Decode it';
+  });
+})();
+</script>
+</body>
+</html>
