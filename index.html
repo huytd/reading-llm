@@ -123,6 +123,23 @@ em { font-style: italic; }
   letter-spacing: .1em; text-transform: uppercase; color: var(--pen); margin-bottom: .15rem;
 }
 
+/* example specimens */
+.ex { display: flex; flex-direction: column; gap: .5rem; }
+.ex-label { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.ex-body {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: .85rem 1rem; font-size: .97rem; line-height: 1.65; min-width: 0; overflow-wrap: anywhere;
+}
+.ex-body ul, .ex-body ol { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: .25rem; }
+.ex-body .who { font-family: var(--mono); font-size: .75rem; color: var(--pen); font-weight: 600; }
+.ex-body .hdrs { font-family: var(--display); font-weight: 700; display: flex; flex-direction: column; gap: .2rem; }
+.ex-body .gap { display: block; font-family: var(--mono); font-size: .78rem; color: var(--ink-soft); margin: .35rem 0; }
+.ex-body .row + .row { margin-top: .6rem; }
+.ex-note { color: var(--ink-soft); font-size: .96rem; padding-left: 1.2rem; position: relative; }
+.ex-note::before { content: "→"; position: absolute; left: 0; color: var(--pen); }
+.step-ex { color: var(--ink-soft); font-size: .93rem; margin-top: .2rem; }
+.step-ex::before { content: "e.g. "; font-family: var(--mono); font-size: .75rem; color: var(--pen); }
+
 ul.plain, ol.steps { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: .45rem; }
 ol.steps { padding-left: 0; list-style: none; counter-reset: s; gap: .9rem; }
 ol.steps li { counter-increment: s; display: grid; grid-template-columns: 2rem 1fr; gap: .5rem; }
@@ -204,6 +221,11 @@ footer { color: var(--ink-soft); font-size: .9rem; border-top: 1px solid var(--r
   <div class="ch-num">Chapter 00</div>
   <h2>Why your brain resists LLM prose</h2>
   <p class="lead">LLM prose is hard to digest because every sentence carries the same weight. Your brain looks for the one sentence that matters and finds a flat plain instead.</p>
+  <div class="ex">
+    <div class="ex-label">Example · asked "How much sleep do I need?"</div>
+    <div class="ex-body"><span class="f">Sleep is important for overall health. It affects many aspects of well-being, including mood and focus. Sleep needs can vary between individuals.</span> <span class="p">Adults generally need 7–9 hours a night.</span> <span class="f">Establishing a consistent routine can also help.</span></div>
+    <p class="ex-note">The one sentence that answers your question sits fourth, in exactly the same tone as the four around it.</p>
+  </div>
   <p>The flatness has a cause. Models like me are trained on human feedback, and raters reward answers that feel complete, organized, polite and safe. So we pad, hedge, balance and structure everything, whether the content needs it or not.</p>
   <p>The habits are repetitive, which is good news for you. Once you can name them, you can skim the wrapper and read the substance.</p>
 </section>
@@ -215,22 +237,47 @@ footer { color: var(--ink-soft); font-size: .9rem; border-top: 1px solid var(--r
 
   <h3>Headers on everything</h3>
   <p>Even a four-paragraph answer gets headers like <span class="q">Overview</span>, <span class="q">Key Considerations</span> and <span class="q">Conclusion</span>. The headers are often the answer in miniature.</p>
+  <div class="ex">
+    <div class="ex-label">Example · asked "Should I learn Python or JavaScript first?"</div>
+    <div class="ex-body"><div class="hdrs"><span>Overview</span><span>Python: Strengths</span><span>JavaScript: Strengths</span><span>Key Considerations</span><span><span class="p">Recommendation</span></span></div></div>
+    <p class="ex-note">Jump straight to Recommendation. The other four sections are support you may not need.</p>
+  </div>
   <div class="move"><b>Reading move</b>Read only the headers first, as a table of contents. Then go to the one section you need.</div>
 
   <h3>Bullets that chop up reasoning</h3>
   <p>Bullets make items look parallel and equal. They also delete the joints between ideas: the <em>because</em> and <em>so</em> that tell you how one point leads to the next.</p>
+  <div class="ex">
+    <div class="ex-label">Example · asked "Why is my site slow?"</div>
+    <div class="ex-body"><ul><li>Your pages load slowly</li><li>The database has no index on <code>user_id</code></li><li>Queries scan the full table</li></ul></div>
+    <p class="ex-note">These look like three separate issues. They are one chain, listed backwards: no index, so full-table scans, so slow pages. Fix the index and all three go away.</p>
+  </div>
   <div class="move"><b>Reading move</b>Decide whether the bullets are <em>options</em> (pick one), <em>steps</em> (do in order) or <em>factors</em> (weigh together). The text rarely says, and the answer changes how you use them.</div>
 
   <h3>Scattered bold</h3>
   <p>Bold marks the phrases the model expects you to scan for. It works as a decent highlighter.</p>
+  <div class="ex">
+    <div class="ex-label">Example · asked "How do we reduce churn?"</div>
+    <div class="ex-body">To reduce churn, focus on <b>onboarding in the first week</b>, since most users who leave do so early. It also helps to look at <b>pricing clarity</b> and <b>support response time</b>, as both come up often in exit surveys.</div>
+    <p class="ex-note">Bold only: "onboarding in the first week, pricing clarity, support response time." That is the answer in ten words.</p>
+  </div>
   <div class="move"><b>Reading move</b>On a first pass, read only the bold text. It usually rebuilds the main point.</div>
 
   <h3>The summary sandwich</h3>
   <p>A common shape: an opening that restates your question, a body, then <span class="q">In summary</span> restating the body. The same idea appears three times.</p>
+  <div class="ex">
+    <div class="ex-label">Example · asked "What laptop should I get for programming?"</div>
+    <div class="ex-body"><span class="f">Choosing a laptop for programming involves balancing several important factors.</span><span class="gap">[ four paragraphs on CPU, RAM, screen and keyboard ]</span><span class="p">In summary, look for at least 16 GB of RAM, a keyboard you like, and a screen of 14 inches or more.</span></div>
+    <p class="ex-note">The closing line is the whole answer. Read it first, then skim the body only for the part you doubt.</p>
+  </div>
   <div class="move"><b>Reading move</b>Read the conclusion first. It is the compressed version, and the body becomes detail you consult only when needed.</div>
 
   <h3>Exhaustive lists</h3>
   <p>Ask for advice and you get seven factors when two matter. Models list everything relevant because leaving something out feels riskier than including it.</p>
+  <div class="ex">
+    <div class="ex-label">Example · asked "Tips for a job interview?"</div>
+    <div class="ex-body"><ol><li>Research the company</li><li><span class="p">Prepare STAR stories for 3–4 past projects</span></li><li>Dress appropriately</li><li>Arrive on time</li><li>Be yourself</li><li>Prepare questions to ask</li><li><span class="p">Send a thank-you note within 24 hours</span></li></ol></div>
+    <p class="ex-note">Item 1, plus the two items with numbers in them, carry the advice. You already knew "arrive on time" and "be yourself."</p>
+  </div>
   <div class="move"><b>Reading move</b>The first item is usually the most important. After that, look for items with a specific number, name or condition. Generic items like <span class="q">consider your goals</span> can be skipped.</div>
 </section>
 
@@ -261,6 +308,11 @@ footer { color: var(--ink-soft); font-size: .9rem; border-top: 1px solid var(--r
   <div class="ch-num">Chapter 03</div>
   <h2>Vocabulary: the favored words</h2>
   <p class="lead">LLMs lean on abstract, slightly elevated words that sound weighty but carry little. Translate them as you read and sentences shrink by half.</p>
+  <div class="ex">
+    <div class="ex-label">Example</div>
+    <div class="ex-body"><span class="f">We leverage a robust, comprehensive platform to streamline workflows and foster collaboration across the organizational landscape.</span></div>
+    <p class="ex-note">Translated: "We use a tool that helps people work together." Then ask how. If the text never says, there is nothing more to find.</p>
+  </div>
   <div class="tbl wide">
     <table>
       <thead><tr><th>LLM word</th><th>Plain meaning</th><th>Information added</th></tr></thead>
@@ -293,18 +345,38 @@ footer { color: var(--ink-soft); font-size: .9rem; border-top: 1px solid var(--r
 
   <h3>Hedging</h3>
   <p>Words like <em>generally, often, typically, may, can, in many cases</em> soften nearly every claim. Some hedges are real uncertainty. Most are reflex.</p>
+  <div class="ex">
+    <div class="ex-label">Example · reflex hedge vs. real hedge</div>
+    <div class="ex-body"><div class="row"><span class="who">REFLEX</span><br><span class="f">SQLite can generally be a good option in many situations.</span></div><div class="row"><span class="who">REAL</span><br><span class="p">SQLite is usually enough, unless several servers need to write to it at the same time.</span></div></div>
+    <p class="ex-note">The first hedge protects the writer. The second tells you exactly when the advice stops applying.</p>
+  </div>
   <div class="move"><b>Reading move</b>Look for the sentence with no hedge. That is usually the committed claim. A hedge followed by a condition (<span class="q">usually, unless your data is under 1 GB</span>) is real. A bare "usually" is padding.</div>
 
   <h3>Both-sidesing</h3>
   <p><span class="q">On one hand… on the other hand… ultimately, it depends on your needs.</span> This looks balanced but can leave you with no answer.</p>
+  <div class="ex">
+    <div class="ex-label">Example · asked "Should I rent or buy?"</div>
+    <div class="ex-body"><span class="f">Renting offers flexibility, while buying builds equity. Both options have their merits. Ultimately, it</span> <span class="p">depends on how long you plan to stay</span> <span class="f">and your long-term goals.</span></div>
+    <p class="ex-note">The decision variable is how long you'll stay. Answer it and ask again: "I'll stay about two years. Rent or buy?"</p>
+  </div>
   <div class="move"><b>Reading move</b>Find what it "depends on". That is the real decision variable. Answer it for yourself, or ask the model directly: "Given X, which one?"</div>
 
   <h3>Validation and agreement</h3>
   <p><span class="q">Great question!</span> <span class="q">You're absolutely right.</span> <span class="q">That's a thoughtful approach.</span> These carry no information.</p>
   <p>They can also hide a problem. Models tend to agree with the user. When an LLM agrees with you, check whether it gave a reason. Agreement without reasoning is weak evidence.</p>
+  <div class="ex">
+    <div class="ex-label">Example</div>
+    <div class="ex-body"><div class="row"><span class="who">YOU</span><br>I'm thinking of rewriting our whole app in Rust.</div><div class="row"><span class="who">LLM</span><br><span class="f">That's a great idea! Rust is known for its excellent performance and memory safety.</span></div></div>
+    <p class="ex-note">Praise, plus general facts about Rust, and nothing about your app. Ask: "What problem in my app would this solve, and what would it cost?"</p>
+  </div>
 
   <h3>Flat confidence</h3>
   <p>This one matters most. LLM prose sounds equally confident whether a claim is solid or invented. Tone tells you nothing about reliability.</p>
+  <div class="ex">
+    <div class="ex-label">Example · two sentences, same tone</div>
+    <div class="ex-body">The Eiffel Tower was completed in 1889. Python's <code>list.sort()</code> returns the sorted list.</div>
+    <p class="ex-note">Both sound equally sure. The first is right. The second is wrong: <code>list.sort()</code> sorts in place and returns <code>None</code>.</p>
+  </div>
   <div class="move"><b>Reading move</b>Verify the specifics you will act on: numbers, names, dates, quotes, citations, code. Fluent is not the same as correct.</div>
 </section>
 
@@ -316,16 +388,36 @@ footer { color: var(--ink-soft); font-size: .9rem; border-top: 1px solid var(--r
   <h3>Uniform paragraphs</h3>
   <p>Most paragraphs follow one template: a topic sentence, two supporting sentences, a wrap-up. Every paragraph is about the same length.</p>
   <p>Human writers vary this. A one-line paragraph says "this matters." A long, winding one says "stay with me." Without those peaks you can't tell where the emphasis is.</p>
+  <div class="ex">
+    <div class="ex-label">Example · one LLM paragraph</div>
+    <div class="ex-body">Exercise has many benefits for health. It strengthens the heart and can improve mood. It may also help with sleep quality. Overall, regular exercise is a valuable habit.</div>
+    <p class="ex-note">Claim, two supports, wrap-up. The next paragraph, on diet, will have the same four beats. A human might write: "Exercise is good for your heart. That's the big one."</p>
+  </div>
 
   <h3>Perfect parallelism</h3>
   <p>Every bullet has the same grammatical shape and roughly the same length. A trivial point ends up looking as important as a critical one.</p>
+  <div class="ex">
+    <div class="ex-label">Example · asked "Good habits for a new developer?"</div>
+    <div class="ex-body"><ul><li>Use version control to track every change</li><li>Write tests to catch bugs before release</li><li>Pick a consistent color theme for your editor</li></ul></div>
+    <p class="ex-note">Same shape, same length, so the editor theme looks as important as version control. It isn't.</p>
+  </div>
 
   <h3>Transitions that add and never argue</h3>
   <p>Watch the connecting words. <em>Additionally, furthermore, moreover, also</em> just mean "here's another item." They pile things up without showing how they relate.</p>
   <p>The words that carry logic are <em>because, so, therefore, but, unless, which is why</em>. Where you find them, real reasoning is happening. Where they are missing, there may be no reasoning at all, only a list in paragraph form.</p>
+  <div class="ex">
+    <div class="ex-label">Example · adding vs. arguing</div>
+    <div class="ex-body"><div class="row"><span class="who">ADDING</span><br>Remote work saves commuting time. <span class="f">Additionally,</span> it offers flexibility. <span class="f">Furthermore,</span> it can reduce office costs.</div><div class="row"><span class="who">ARGUING</span><br>Remote work saves commuting time, <span class="p">so</span> people often start earlier, <span class="p">which is why</span> some teams report longer workdays.</div></div>
+    <p class="ex-note">The first is three items in a pile. The second is a claim you can test, agree with or dispute.</p>
+  </div>
 
   <h3>Signposting</h3>
   <p><span class="q">Let's break this down.</span> <span class="q">Here's the thing.</span> <span class="q">First… Second… Finally…</span> These are road signs. They help you orient and contain nothing else.</p>
+  <div class="ex">
+    <div class="ex-label">Example · asked "How do I move my contacts?"</div>
+    <div class="ex-body"><span class="f">Let's break this down. Here's the thing: there are three steps.</span> <span class="p">First, export your contacts as a CSV file.</span></div>
+    <p class="ex-note">Start reading at "First."</p>
+  </div>
   <div class="move"><b>Reading move</b>The text won't create emphasis for you, so create it yourself. Flag sentences that contain a number, a name, a decision or a logic word. Those are your peaks.</div>
 </section>
 
@@ -351,6 +443,11 @@ footer { color: var(--ink-soft); font-size: .9rem; border-top: 1px solid var(--r
     <li><span class="q">Would you like me to…?</span> An offer.</li>
     <li><span class="q">Remember to consult a professional.</span> A reflex disclaimer, unless it names a specific risk.</li>
   </ul>
+  <div class="ex">
+    <div class="ex-label">Example · asked "How do I undo my last git commit?"</div>
+    <div class="ex-body"><span class="f">Great question! You're asking how to undo your most recent commit, which is a common situation many developers face.</span> <span class="p">Run <code>git reset --soft HEAD~1</code>. The commit is gone and your changes stay staged.</span> <span class="f">In summary, git reset is a powerful tool for undoing commits. I hope this helps!</span> Let me know if you'd like an explanation of <code>git revert</code> for commits you've already pushed.</div>
+    <p class="ex-note">Two sentences of payload in the middle. The final offer is worth a glance: if you already pushed, <code>git revert</code> is the safer route.</p>
+  </div>
   <div class="move"><b>Reading move</b>The last real sentence sits just before the offer or sign-off. Give the offer one glance, since it sometimes suggests a useful next step.</div>
 </section>
 
@@ -359,13 +456,13 @@ footer { color: var(--ink-soft); font-size: .9rem; border-top: 1px solid var(--r
   <h2>How to read it: a practical method</h2>
   <p class="lead">Read LLM text like a scout, not a student. Find the payload first, then decide how much of the rest you need.</p>
   <ol class="steps">
-    <li><div><strong>Read the first sentence and the last real paragraph.</strong> Together they are often the whole answer.</div></li>
-    <li><div><strong>Skim headers and bold as an outline.</strong> Pick the one section you need.</div></li>
-    <li><div><strong>Hunt for specifics.</strong> Numbers, names, dates, code, concrete examples. That is the payload. The abstract sentences around it are packaging.</div></li>
+    <li><div><strong>Read the first sentence and the last real paragraph.</strong> Together they are often the whole answer.<div class="step-ex">"16 GB of RAM is enough for most programming" at the top, "go to 32 GB if you run many Docker containers" at the end. Those two lines are the answer.</div></div></li>
+    <li><div><strong>Skim headers and bold as an outline.</strong> Pick the one section you need.<div class="step-ex">Overview · Options · Trade-offs · Recommendation. Open Recommendation.</div></div></li>
+    <li><div><strong>Hunt for specifics.</strong> Numbers, names, dates, code, concrete examples. That is the payload. The abstract sentences around it are packaging.<div class="step-ex">"Use a strong password" says little. "Use 12 or more characters" is the payload.</div></div></li>
     <li><div><strong>Translate filler as you go.</strong> <span class="q">Leverage robust solutions</span> becomes "use something that works."</div></li>
-    <li><div><strong>Find the committed claims.</strong> The unhedged sentences, and whatever the answer "depends on."</div></li>
-    <li><div><strong>Follow the logic words.</strong> <em>Because, so, but, unless</em> show the reasoning. No logic words, no argument.</div></li>
-    <li><div><strong>Verify what matters.</strong> A fluent tone is not evidence. Check facts you will act on.</div></li>
+    <li><div><strong>Find the committed claims.</strong> The unhedged sentences, and whatever the answer "depends on."<div class="step-ex">"It depends on whether you need offline access." Offline access is your decision.</div></div></li>
+    <li><div><strong>Follow the logic words.</strong> <em>Because, so, but, unless</em> show the reasoning. No logic words, no argument.<div class="step-ex">"Sales fell because the price rose" is an argument. "Sales fell. Additionally, the price rose." is two facts side by side.</div></div></li>
+    <li><div><strong>Verify what matters.</strong> A fluent tone is not evidence. Check facts you will act on.<div class="step-ex">A cited paper title, a function name, a statistic. Look it up before you repeat it.</div></div></li>
     <li><div><strong>Fix it upstream.</strong> Ask for a format you can digest: "Answer in three sentences," "Lead with your recommendation," "No bullets, explain the reasoning," or "Give me one example."</div></li>
   </ol>
 
